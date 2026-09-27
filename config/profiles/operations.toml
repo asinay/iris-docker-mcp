@@ -1,0 +1,17 @@
+# IRIS Operations profile: system/namespace/database info, logs, mirror
+# status, performance, audit — the "admin" category, plus the read-only
+# categories for context.
+#
+# Most tools in the admin category are read-only (iris_namespace_list,
+# iris_database_list, iris_database_stats, iris_mirror_status,
+# iris_system_performance, capability_matrix, my_access, query_audit_log),
+# but iris_admin also has write/destructive actions (creating users,
+# enabling web apps, etc). Keep writes off unless you specifically need them:
+#   IRIS_WRITE_TOOLS_ENABLED=0
+#   IRIS_DESTRUCTIVE_TOOLS_ENABLED=0
+#
+# journal_search additionally requires dataPolicy = "allow" on this
+# connection (bulk-PHI gate) — deliberately not set here.
+
+[policy.default]
+allow = ["query", "search", "docs", "admin"]

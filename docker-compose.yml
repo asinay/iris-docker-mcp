@@ -1,0 +1,21 @@
+# Optional convenience for local dev/testing only.
+#
+# The real integration path for MCP clients (Claude Code, Claude Desktop,
+# Cursor, etc.) is Docker MCP Toolkit / Gateway, or a direct `docker run -i`
+# stdio entry in the client's own MCP config — see README.md and
+# docs/windows-setup.md. `docker compose up` here runs iris-agentic-dev in
+# HTTP transport mode so you can smoke-test it with curl/scripts without a
+# gateway. The upstream HTTP transport has NO authentication, so the port is
+# published to 127.0.0.1 only — do not change that binding.
+
+services:
+  iris-agentic-dev:
+    image: ghcr.io/intersystems-community/iris-agentic-dev:1.4.2
+    command: ["mcp", "--transport", "http", "--bind", "0.0.0.0", "--port", "8080"]
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:8787:8080"
+    extra_hosts:
+      # Needed on Linux hosts; harmless no-op on Windows/macOS Docker Desktop.
+      - "host.docker.internal:host-gateway"

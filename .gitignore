@@ -1,0 +1,20 @@
+# Secrets and local config — never commit real credentials
+.env
+*.env
+!.env.example
+.iris-agentic-dev.toml
+config/*.local.toml
+config/profiles/*.local.toml
+
+# Docker MCP Toolkit local state (if ever created inside this repo)
+.docker/
+
+# Local design brief, not project documentation
+initial-prompt.md
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+
+# Logs from scripts/test.*
+*.log

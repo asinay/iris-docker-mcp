@@ -1,0 +1,32 @@
+# Example .iris-agentic-dev.toml for iris-docker-mcp.
+#
+# Prefer .env / environment variables for the basic connection (see
+# .env.example) — this file is only needed for features that are TOML-only:
+# per-connection policy gates, the mcpTemplate environment gate, and
+# %SYS.Audit emission. Generated manually from docs/connecting.md and
+# docs/tools.md in the upstream repo (intersystems-community/iris-agentic-dev);
+# run `iris-agentic-dev init` yourself to get a version tailored to a detected
+# IRIS instance.
+#
+# Mount this file (or one of config/profiles/*.toml) into the container as
+# /work/.iris-agentic-dev.toml and set OBJECTSCRIPT_WORKSPACE=/work — see
+# docs/windows-setup.md for the exact PowerShell command.
+
+host = "host.docker.internal"
+web_port = 52773
+namespace = "USER"
+username = "_SYSTEM"
+# Do NOT put a password here. Pass IRIS_PASSWORD as an env var or Docker
+# secret instead — this file is meant to be safe to commit (no secrets), even
+# though .gitignore also excludes any *.local.toml you create from it.
+
+# dev (default, permits everything) | test (blocks execution/compile) |
+# live (blocks those plus source control)
+mcpTemplate = "dev"
+
+# Category allowlist for THIS connection. "default" is the catchall key for
+# flat single-server configs (no VS Code Server Manager). Available
+# categories: compile, execute, query, search, docs, source_control, debug,
+# admin, skill, kb. Omit this block entirely to permit every category.
+[policy.default]
+allow = ["query", "search", "docs"]

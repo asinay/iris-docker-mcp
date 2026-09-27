@@ -1,0 +1,67 @@
+# Draft Docker MCP Registry server definition for iris-agentic-dev.
+#
+# This is NOT submitted anywhere yet (see docs/mcp-registry.md). It doubles as
+# the input for building a local Docker MCP Toolkit catalog:
+#
+#   docker mcp catalog create iris-mcp-catalog --title "IRIS Agentic Dev" \
+#     --server file://./server.yaml
+#
+# Schema reference: https://github.com/docker/mcp-registry (servers/*/server.yaml)
+#
+# `tools:` is intentionally omitted. iris-agentic-dev is a real MCP server
+# (type: server) that answers tools/list itself — the gateway introspects its
+# tool catalog dynamically instead of a hand-maintained duplicate list here.
+
+name: iris-agentic-dev
+type: server
+
+meta:
+  category: database
+  tags:
+    - intersystems
+    - iris
+    - objectscript
+    - sql
+    - database
+
+about:
+  title: InterSystems IRIS Agentic Dev
+  description: >-
+    MCP tools for InterSystems IRIS: SQL queries, ObjectScript execution and
+    compilation, class/routine/global introspection, interoperability
+    production management, and namespace/database administration — over the
+    Atelier REST API. Upstream project: intersystems-community/iris-agentic-dev.
+  icon: https://avatars.githubusercontent.com/u/6015182?s=200&v=4
+  readme: https://github.com/intersystems-community/iris-agentic-dev#readme
+
+source:
+  project: https://github.com/intersystems-community/iris-agentic-dev
+  # Pinned to the commit tagged v1.4.2 at the time this file was written.
+  commit: b20bae161c002b95272699a869457d41eb2fd139
+
+image: ghcr.io/intersystems-community/iris-agentic-dev:1.4.2
+# Self-provided pre-built image (upstream publishes and signs this image;
+# see docs/mcp-registry.md for what changes if this moves to a Docker-built
+# image under mcp/<name>).
+command: ["mcp"]
+
+secrets:
+  - name: iris-agentic-dev.password
+    env: IRIS_PASSWORD
+    example: YOUR_IRIS_PASSWORD
+
+env:
+  - name: IRIS_HOST
+    example: host.docker.internal
+  - name: IRIS_WEB_PORT
+    example: "52773"
+  - name: IRIS_SCHEME
+    example: http
+  - name: IRIS_NAMESPACE
+    example: USER
+  - name: IRIS_USERNAME
+    example: _SYSTEM
+  - name: IRIS_WRITE_TOOLS_ENABLED
+    example: "0"
+  - name: IRIS_DESTRUCTIVE_TOOLS_ENABLED
+    example: "0"

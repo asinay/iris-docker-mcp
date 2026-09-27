@@ -1,0 +1,14 @@
+# IRIS Developer profile: adds compile, execution, debugging, source control,
+# and skills on top of the Read Only categories.
+#
+# Pair with:
+#   IRIS_WRITE_TOOLS_ENABLED=1
+#   IRIS_DESTRUCTIVE_TOOLS_ENABLED=0   # still no namespace/global deletion
+#
+# iris_execute/iris_execute_method/iris_query(mode=write)/iris_global run as
+# whatever account you set IRIS_USERNAME to unless you also set
+# IRIS_SERVICE_USERNAME/IRIS_SERVICE_PASSWORD to a least-privilege account —
+# see docs/security.md.
+
+[policy.default]
+allow = ["query", "search", "docs", "compile", "execute", "debug", "source_control", "skill"]

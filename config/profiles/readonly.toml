@@ -1,0 +1,11 @@
+# IRIS Read Only profile.
+#
+# Pair with these env vars (see .env.example / docs/security.md):
+#   IRIS_WRITE_TOOLS_ENABLED=0
+#   IRIS_DESTRUCTIVE_TOOLS_ENABLED=0
+#
+# The env vars are the real enforcement (checked before the category gate
+# below runs); this file trims the tool categories on top of that.
+
+[policy.default]
+allow = ["query", "search", "docs"]

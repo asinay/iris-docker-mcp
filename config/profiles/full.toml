@@ -1,0 +1,13 @@
+# IRIS Full profile: every tool category. There is no allowlist to write —
+# omitting [policy.default] entirely is how iris-agentic-dev's own docs say
+# to permit everything, so this file intentionally has no policy block.
+#
+# Category filtering is NOT a substitute for the write/destructive gates.
+# Decide those independently and set them explicitly rather than relying on
+# namespace-name inference (see docs/security.md):
+#   IRIS_WRITE_TOOLS_ENABLED=1
+#   IRIS_DESTRUCTIVE_TOOLS_ENABLED=1
+#
+# This profile has no read-only guardrail left. Only use it against an IRIS
+# instance/namespace you are fully comfortable with an AI agent modifying or
+# deleting data in.
