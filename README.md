@@ -61,7 +61,7 @@ notepad .env   # set IRIS_HOST, IRIS_WEB_PORT, IRIS_USERNAME, IRIS_PASSWORD, IRI
 
 If the smoke test passes, register it with Docker MCP Toolkit (Path A) or drop it
 straight into your MCP client's config (Path B) — both are documented in
-[docs/windows-setup.md](docs/windows-setup.md).
+[docs/windows-setup.md](docs/windows-setup.md) and verified working end-to-end.
 
 ## Windows / `host.docker.internal` example
 

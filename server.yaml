@@ -1,38 +1,64 @@
-# Draft Docker MCP Registry server definition for iris-agentic-dev.
+# Local Docker MCP Toolkit catalog definition for iris-agentic-dev.
 #
-# This is NOT submitted anywhere yet (see docs/mcp-registry.md). It doubles as
-# the input for building a local Docker MCP Toolkit catalog:
+# This is NOT the docker/mcp-registry submission — that's a different file with a
+# different (nested about:/meta:/config:) schema, submitted at
+# https://github.com/docker/mcp-registry/pull/5281. This file is a flat, top-level
+# schema that a local Docker Desktop install's own catalog CLI consumes directly:
 #
-#   docker mcp catalog create iris-mcp-catalog --title "IRIS Agentic Dev" \
-#     --server file://./server.yaml
+#   docker mcp catalog create iris-mcp-catalog --title "IRIS Agentic Dev" --server file://./server.yaml
 #
-# Schema reference: https://github.com/docker/mcp-registry (servers/*/server.yaml)
+# for anyone who wants this server in their own Docker MCP Toolkit without going
+# through the registry. See docs/mcp-registry.md for how these two schemas relate
+# and why they aren't interchangeable, despite the shared filename.
+#
+# Schema note (confirmed against a real Docker Desktop install, both CLI and
+# GUI): fields live at the TOP LEVEL of the server object (name, type, image,
+# description, title, icon, readme, secrets, env, command, metadata) for *this*
+# local-catalog schema — the registry's own schema genuinely does nest these
+# under `about:`/`meta:`/`config:`, confirmed by reading its Go source; the two
+# schemas are simply different, not one stale copy of the other. The CLI here
+# (`docker mcp catalog create`) silently accepts a server missing `description`,
+# but Docker Desktop's Profiles UI hard-crashes ("Failed to load profiles", a zod
+# `invalid_type`/`Required` error on `servers.0.snapshot.server.description`) the
+# moment such a profile exists. `description` is effectively required in
+# practice, even though the CLI doesn't enforce it.
 #
 # `tools:` is intentionally omitted. iris-agentic-dev is a real MCP server
 # (type: server) that answers tools/list itself — the gateway introspects its
 # tool catalog dynamically instead of a hand-maintained duplicate list here.
+#
+# A plain `env:` entry with only `name`/`example` resolves to `value: ""` in the
+# catalog snapshot built by `docker mcp catalog create` — silently unbound, so
+# the gateway never passes `-e <NAME>` to the container at all (confirmed via
+# `docker mcp gateway run --dry-run --verbose`, which showed a docker run
+# invocation with only `-e IRIS_PASSWORD`, missing every plain env var). The
+# runtime binding to a profile's `config` value is the `value:
+# "{{iris-agentic-dev.<NAME>}}"` template, same convention Docker's own
+# published catalog entries use (e.g. `docker mcp catalog show
+# mcp/docker-mcp-catalog:latest`, airtable-mcp-server's NODE_ENV) — and, we now
+# know from the registry's own PR tooling, the same convention its schema needs
+# too. Both fields are kept below: `example` as a human-readable placeholder,
+# `value` so a locally-built catalog actually wires the var through.
 
 name: iris-agentic-dev
 type: server
+title: InterSystems IRIS Agentic Dev
+description: >-
+  MCP tools for InterSystems IRIS: SQL queries, ObjectScript execution and
+  compilation, class/routine/global introspection, interoperability
+  production management, and namespace/database administration — over the
+  Atelier REST API. Upstream project: intersystems-community/iris-agentic-dev.
+icon: https://avatars.githubusercontent.com/u/6015182?s=200&v=4
+readme: https://github.com/intersystems-community/iris-agentic-dev#readme
 
-meta:
-  category: database
+metadata:
+  category: database  
   tags:
     - intersystems
     - iris
     - objectscript
     - sql
     - database
-
-about:
-  title: InterSystems IRIS Agentic Dev
-  description: >-
-    MCP tools for InterSystems IRIS: SQL queries, ObjectScript execution and
-    compilation, class/routine/global introspection, interoperability
-    production management, and namespace/database administration — over the
-    Atelier REST API. Upstream project: intersystems-community/iris-agentic-dev.
-  icon: https://avatars.githubusercontent.com/u/6015182?s=200&v=4
-  readme: https://github.com/intersystems-community/iris-agentic-dev#readme
 
 source:
   project: https://github.com/intersystems-community/iris-agentic-dev
@@ -53,15 +79,22 @@ secrets:
 env:
   - name: IRIS_HOST
     example: host.docker.internal
+    value: "{{iris-agentic-dev.IRIS_HOST}}"
   - name: IRIS_WEB_PORT
     example: "52773"
+    value: "{{iris-agentic-dev.IRIS_WEB_PORT}}"
   - name: IRIS_SCHEME
     example: http
+    value: "{{iris-agentic-dev.IRIS_SCHEME}}"
   - name: IRIS_NAMESPACE
     example: USER
+    value: "{{iris-agentic-dev.IRIS_NAMESPACE}}"
   - name: IRIS_USERNAME
     example: _SYSTEM
+    value: "{{iris-agentic-dev.IRIS_USERNAME}}"
   - name: IRIS_WRITE_TOOLS_ENABLED
     example: "0"
+    value: "{{iris-agentic-dev.IRIS_WRITE_TOOLS_ENABLED}}"
   - name: IRIS_DESTRUCTIVE_TOOLS_ENABLED
     example: "0"
+    value: "{{iris-agentic-dev.IRIS_DESTRUCTIVE_TOOLS_ENABLED}}"

@@ -1,3 +1,6 @@
+# Dev logs
+dev-logs/
+
 # Secrets and local config — never commit real credentials
 .env
 *.env
